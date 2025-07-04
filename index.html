@@ -155,19 +155,16 @@
 </head>
 <body>
 
-<!-- Trang 1: Giới thiệu -->
 <div class="intro" id="intro">
   <h1>🎈 Chào mừng đến với thiệp sinh nhật 🎈</h1>
   <button onclick="showMusic()">Tiếp tục</button>
 </div>
 
-<!-- Trang 2: Nhạc -->
 <div class="music" id="music">
   <h1>😏 Tưởng tới đó thôi à, nhấn tiếp đi 😏</h1>
   <button onclick="showCard()">Vô thiệp thiệt nè</button>
 </div>
 
-<!-- Trang 3: Thiệp -->
 <div class="card" id="card">
   <img src="2dua.jpg" alt="Hai đứa mình ❤️">
   <h2>🎂 Chúc mừng sinh nhật bạn của mình 🎂</h2>
@@ -258,7 +255,7 @@
   animate();
 </script>
 
-<!-- Hiệu ứng gõ từng dòng lời chúc -->
+<!-- Lời chúc gõ từng dòng -->
 <script>
   const blessingLines = [
     "Hôm nay trời xanh mây trắng nắng vàng, là sn của HN🎉",
@@ -292,7 +289,7 @@
     "Trong trường hợp xấu nhất thì code này nó sẽ bị ngu",
     "Thông cảm người học lần đầu",
     "Chờ khi nào giỏi hơn sẽ thử làm tý IOT :>>",
-    "May your days be filled with joy and your nights with gentle dreams"
+    "May your days be filled with joy and your nights with gentle dreams",
     "Tận hưởng nốt đi, trước khi bước sang U30"
   ];
 
@@ -351,7 +348,7 @@
   }
 </script>
 
-<!-- Lớp phủ yêu cầu tương tác đầu tiên -->
+<!-- Lớp phủ kích hoạt âm thanh -->
 <div id="click-to-start" style="position: fixed; z-index: 9999; width: 100vw; height: 100vh; background: rgba(255, 255, 255, 0.9); display: flex; justify-content: center; align-items: center; flex-direction: column;">
   <h2 style="font-size: 24px; color: #6d28d9;">🎉 Nhấn để bắt đầu trải nghiệm 🎉</h2>
   <button onclick="unlockAudio()" style="padding: 12px 24px; font-size: 16px; border: none; border-radius: 8px; background-color: #8b5cf6; color: white; cursor: pointer; margin-top: 20px;">Bắt đầu ngay</button>
