@@ -1,166 +1,376 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>🎂 Thiệp Sinh Nhật Cực Đáng Yêu 🎂</title>
+  <title>Thiệp Sinh Nhật – Hồng Ngọc</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
   <style>
     html, body {
       margin: 0;
       padding: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: black;
       overflow: hidden;
-      height: 100vh;
+      font-family: 'Dancing Script', cursive;
     }
 
-    #container {
-      position: relative;
-      width: 100%;
-      height: 100%;
+    #background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: url('bg.png') no-repeat center center fixed;
+      background-size: cover;
+      z-index: -2;
+      animation: animateBg 15s infinite linear;
+      filter: brightness(0.9) contrast(1.1);
+    }
+
+    @keyframes animateBg {
+      0% { background-position: 0% 0%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 0%; }
+    }
+
+    .btn {
+      padding: 12px 24px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background-color: #8b5cf6;
       color: white;
-      display: flex;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #7c3aed;
+    }
+
+    .page {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: none;
       justify-content: center;
       align-items: center;
       flex-direction: column;
-      z-index: 2;
       text-align: center;
-      padding-top: 80px;
     }
 
-    #title {
-      font-size: 2rem;
-      font-weight: bold;
-      margin-bottom: 20px;
-      background: rgba(255, 105, 180, 0.2);
-      padding: 10px 20px;
-      border-radius: 20px;
-      box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    .page.show {
+      display: flex;
     }
 
     #countdown {
-      font-size: 1.8rem;
-      background: rgba(0, 0, 0, 0.6);
-      padding: 1rem 2rem;
-      border-radius: 20px;
-      box-shadow: 0 0 20px rgba(255,255,255,0.3);
-      margin-bottom: 1rem;
-    }
-
-    #startButton {
-      padding: 0.75rem 1.5rem;
-      font-size: 1.2rem;
-      border: none;
-      border-radius: 20px;
-      background-color: #ff69b4;
+      font-family: 'Courier New', monospace;
+      font-size: 36px;
       color: white;
-      cursor: pointer;
-      display: none;
+      background: black;
+      padding: 20px 40px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 10px white;
     }
 
-    #message {
-      display: none;
-      font-size: 1.4rem;
-      padding: 2rem;
-      background: rgba(0,0,0,0.6);
-      border-radius: 16px;
-      line-height: 1.6;
-    }
-
-    .background-gif {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: 0;
-      filter: brightness(0.5);
-    }
-
-    .snow {
-      position: absolute;
-      width: 10px;
-      height: 10px;
+    .bling {
+      position: fixed;
+      width: 6px;
+      height: 6px;
       background: white;
       border-radius: 50%;
-      opacity: 0.8;
+      box-shadow: 0 0 8px white;
+      animation: blink 2s infinite ease-in-out;
+      z-index: -1;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 0.1; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.4); }
+    }
+
+    .falling {
+      position: fixed;
+      font-size: 20px;
       animation: fall linear infinite;
-      z-index: 3;
+      z-index: 0;
     }
 
     @keyframes fall {
-      0% { transform: translateY(-10px); }
-      100% { transform: translateY(110vh); }
+      0% { transform: translateY(-100px); opacity: 1; }
+      100% { transform: translateY(110vh); opacity: 0; }
+    }
+
+    .firework {
+      position: fixed;
+      pointer-events: none;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+    }
+
+    #audio-toggle {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 9999;
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .title {
+      font-size: 36px;
+      margin-bottom: 40px;
+      text-align: center;
+      position: relative;
+      top: -20px;
     }
   </style>
 </head>
 <body>
+  <div id="background"></div>
+  <canvas class="firework" id="fireworks"></canvas>
+  <button id="audio-toggle">🔊 Bật/Tắt nhạc</button>
+  <audio id="bg-music" loop>
+    <source src="be-friend-forever.mp3" type="audio/mp3">
+  </audio>
 
-  <!-- GIF nền cute anime -->
-  <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZzFwaTg4MmU2bHNhODJlM21tbXEyZzZqcWlzNnliY21rNmtyb3NtcCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/10VjiVoa9rWC4M/giphy.gif" class="background-gif" />
+  <div class="page show" id="page0">
+    <div id="countdown">Đang tính thời gian...</div>
+  </div>
 
-  <div id="container">
-    <div id="title">🎂 Thiệp Sinh Nhật Cực Đáng Yêu 🎂</div>
-    <div id="countdown">Đang tải...</div>
-    <button id="startButton">Bấm để nhận lời chúc 🥰</button>
-    <div id="message">
-      🎉🎂 Hí hí sinh nhật tới rồi đó nhaaaa 🎂🎉<br><br>
-      Chúc bạn của tui luôn xinh xắn, tươi tắn, đáng yêu như cái thiệp này nè 😚<br>
-      Làm gì cũng suôn sẻ, học gì cũng nhớ lâu, ăn gì cũng ngon 😋<br><br>
-      Mong bạn sẽ luôn là chính mình – rạng rỡ và tự do như bạn vốn có 🌈<br>
-      <b>Happy Birthday to my dear friend 💖</b><br><br>
-      (P/s: Nhớ mời tui ăn nha 🙈)
-    </div>
+  <div class="page" id="page1">
+    <h2>🎂 19 tuổi rồi he, nhớ nhấn dô nè 🎂</h2>
+    <button class="btn" onclick="nextPage(2)">Bắt đầu nè</button>
+  </div>
+
+  <div class="page" id="page2">
+    <h2 id="teaseText">😏 Hình như bị lỗi rồi đó, tiếp đi 😏</h2>
+    <button class="btn" onclick="teaseClick()">Ấn tiếp thử coi 🤭</button>
+  </div>
+
+  <div class="page" id="page3">
+    <h2 class="title">🎂 HAPPY HAPPY HAPPY BIRTHDAY 🎂</h2>
+    <div id="blessing-box" style="max-width: 600px; margin: auto;"></div>
   </div>
 
   <script>
-    const countdownEl = document.getElementById("countdown");
-    const startBtn = document.getElementById("startButton");
-    const msg = document.getElementById("message");
+    const blessingLines = [
+      "Hôm nay trời xanh mây trắng nắng vàng, là sn của HN🎉",
+      "19 tuổi rồi đó, nhanh thế (vẫn đang tự thấy shock)💜",
+      "Chúc HN thiệt nhiều niềm vui, hạnh phúc và yêu thương",
+      "Luôn dịu dàng, nhưng cũng mạnh mẽ khi cần nha",
+      "Bạn là một người đặc biệt – với chính bạn và với mình nữa",
+      "Mong bạn luôn sống thật với lòng mình, không cần gồng gánh quá nhiều nữa",
+      "Cười nhiều hơn nữa, vui nhiều chút",
+      "Ờm vẫn chịu được tính sáng nắng chiều mưa tối hên xui của mình",
+      "Xin kảm ơn",
+      "Dù mình không ở gần – nhưng mà yên tâm, vẫn nhớ HN",
+      "Thật sự may mắn vì gặp đc HN :>>>",
+      "Lâu lâu thấy như mẹ thật -.-",
+      "Nhưng mà do đó chắc chắn HN là duy nhất :D thân nhất",
+      "Nên chắc chắn là HN xứng đáng với thật nhiều điều tốt đẹp :3",
+      "Khi mệt mỏi thì hãy nghỉ ngơi đê",
+      "Ăn tốt ngủ ngon ngủ đúng giờ bảo toàn long thể",
+      "Ở hơi xa nên cũng mong ai đấy update nhiều tý còn biết tình hình",
+      "Cũng mong sẽ luôn tỏa sáng với ánh Dương :DDDDDD",
+      "19 tuổi rồi he, ơ hết năm nhất r à -.-",
+      "Tiếp tục vững bước trên con đường đã chọn nhé ._.",
+      "Chúc cho 19 tuổi mỗi ngày một niềm vui, ngày nèo cũng dui",
+      "Ncl happy happy birthday",
+      "BFF",
+      "Sống vui sống khỏe sống an nhàn",
+      "Nguyện mọi điều đẹp đẽ nhất sẽ tới với HN",
+      "Ờm đánh đổi bằng độ khó các môn chuyên ngành ở bkhoa nha :))",
+      "Hy vọng chúng mình mãi là bạn thân nhất :D",
+      "Hết rồi",
+      "Trong trường hợp xấu nhất thì code này nó sẽ bị ngu",
+      "Thông cảm người học lần đầu",
+      "Chờ khi nào giỏi hơn sẽ thử làm tý IOT :>>",
+      "May your days be filled with joy and your nights with gentle dreams",
+      "Tận hưởng đi vì nốt năm nữa U30 rồi đó :D"
+    ];
 
-    const targetDate = new Date("2025-07-06T00:00:00");
-
-    function updateCountdown() {
-      const now = new Date();
-      const diff = targetDate - now;
-
-      if (diff <= 0) {
-        countdownEl.innerText = "🎉 Đã tới ngày 6 tháng 7 năm 2025 rồi đóooo 🎉";
-        startBtn.style.display = "inline-block";
-        return;
+    function startTyping() {
+      const box = document.getElementById("blessing-box");
+      let currentLine = 0;
+      function typeLine() {
+        if (currentLine >= blessingLines.length) return;
+        const p = document.createElement("p");
+        let text = blessingLines[currentLine];
+        let i = 0;
+        box.innerHTML = "";
+        box.appendChild(p);
+        const interval = setInterval(() => {
+          p.textContent += text[i];
+          i++;
+          if (i >= text.length) {
+            clearInterval(interval);
+            currentLine++;
+            setTimeout(typeLine, 2000);
+          }
+        }, 40);
       }
+      typeLine();
+    }
 
-      const totalSeconds = Math.floor(diff / 1000);
-      const hours = String(Math.floor((totalSeconds / 3600) % 24)).padStart(2, '0');
-      const minutes = String(Math.floor((totalSeconds / 60) % 60)).padStart(2, '0');
-      const seconds = String(totalSeconds % 60).padStart(2, '0');
+    const teaseLines = [
+      "😏 Hnhu bị lỗi rồi đó, tiếp đi 😏",
+      "🙄 Thấy cũng cũng rồi đó, chắc do non tay load hơi lâu 🙄",
+      "😝 Ơ còn à, chắc lần cuối rồi đó,  chắc chắn😝",
+      "🤭 Hãy sống kiên nhẫn lên nèo, kiên nhẫn là tốt, là liều thuốc cho sức khỏe và tinh thần chạy deadline 🤭",
+      "🥳 Roài thôi không thách thức nữa, để chuyển qua ndung chính 🥳",
+      "🤣 Hnhu ctrinh lỗi rồi, chết rồi biết lsao đâyyyy🤣",
+      "😜 Chờ tý đi, đang sửa nốt, chắc vậy (hoặc thách thức lòng kiên nhẫn) 😜",
+      "🥰 Đến đc tận đây rồi cũng tốt đó, hê hê, ncl không đùa nữa đâu, chơi thật này",
+      "😇 Lần này legit nha, ko troll troll nữa, ko nhấn là tiếc"
+    ];
 
-      if (targetDate.getDate() === now.getDate()) {
-        countdownEl.innerText = `Còn: ${hours}:${minutes}:${seconds} nữa là tới 6/7`;
-      } else {
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        countdownEl.innerText = `Còn: ${days} ngày ${hours} giờ ${minutes} phút ${seconds} giây là tới ngày 6 tháng 7 năm 2025`;
+    let teaseCount = 0;
+    function teaseClick() {
+      document.getElementById("teaseText").innerText = teaseLines[teaseCount] || "😇 Nhấn nữa là sang trang nè";
+      teaseCount++;
+      if (teaseCount === teaseLines.length) {
+        nextPage(3);
+        startTyping();
+        playMusic();
       }
     }
 
-    setInterval(updateCountdown, 1000);
-    updateCountdown();
+    function nextPage(n) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('show'));
+      document.getElementById(page${n}).classList.add('show');
+    }
 
-    startBtn.onclick = () => {
-      startBtn.style.display = "none";
-      msg.style.display = "block";
+    function playMusic() {
+      const audio = document.getElementById('bg-music');
+      audio.volume = 0;
+      audio.play();
+      let vol = 0;
+      const fade = setInterval(() => {
+        vol += 0.05;
+        if (vol >= 1) clearInterval(fade);
+        audio.volume = Math.min(vol, 1);
+      }, 200);
+    }
+
+    document.getElementById("audio-toggle").onclick = function () {
+      const audio = document.getElementById("bg-music");
+      if (audio.paused) {
+        audio.play();
+        this.textContent = "🔊 Bật/Tắt nhạc";
+      } else {
+        audio.pause();
+        this.textContent = "🔇 Đã tắt nhạc";
+      }
     };
 
-    // Tạo tuyết rơi
-    for (let i = 0; i < 80; i++) {
-      let snow = document.createElement("div");
-      snow.className = "snow";
-      snow.style.left = Math.random() * 100 + "vw";
-      snow.style.animationDuration = 3 + Math.random() * 5 + "s";
-      snow.style.animationDelay = Math.random() * 5 + "s";
-      document.body.appendChild(snow);
+    function updateCountdown() {
+      const targetDate = new Date("2025-07-06T00:00:00").getTime();
+      const cd = document.getElementById("countdown");
+      const interval = setInterval(() => {
+        const now = new Date().getTime();
+        const distance = targetDate - now;
+        if (distance <= 0) {
+          clearInterval(interval);
+          cd.textContent = "🎉 Hết giờ! Nhấn để bắt đầu 🎉";
+          cd.onclick = () => nextPage(1);
+          cd.style.cursor = "pointer";
+        } else {
+          const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+          const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+          cd.textContent = ${days} ngày ${hours} giờ ${minutes} phút ${seconds} giây;
+        }
+      }, 1000);
     }
-  </script>
 
+    for (let i = 0; i < 80; i++) {
+      const sparkle = document.createElement('div');
+      sparkle.className = 'bling';
+      sparkle.style.left = Math.random() * 100 + 'vw';
+      sparkle.style.top = Math.random() * 100 + 'vh';
+      sparkle.style.animationDelay = (Math.random() * 4) + 's';
+      sparkle.style.opacity = Math.random();
+      document.body.appendChild(sparkle);
+    }
+
+    function createFalling(symbol, duration) {
+      const el = document.createElement('div');
+      el.className = 'falling';
+      el.textContent = symbol;
+      el.style.left = Math.random() * 100 + "vw";
+      el.style.top = "-50px";
+      el.style.animationDuration = duration + "s";
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), duration * 1000);
+    }
+
+    setInterval(() => createFalling("🌸", 10 + Math.random() * 10), 700);
+    setInterval(() => createFalling("❄️", 10 + Math.random() * 10), 900);
+    setInterval(() => createFalling("⭐", 5 + Math.random() * 8), 500);
+
+    const canvas = document.getElementById("fireworks");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    let particles = [];
+
+    function FireworkParticle(x, y, color) {
+      return {
+        x, y,
+        radius: 2,
+        color,
+        angle: Math.random() * 2 * Math.PI,
+        speed: Math.random() * 5 + 2,
+        alpha: 1,
+        update() {
+          this.x += Math.cos(this.angle) * this.speed;
+          this.y += Math.sin(this.angle) * this.speed + 1;
+          this.alpha -= 0.01;
+        },
+        draw() {
+          ctx.globalAlpha = this.alpha;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+          ctx.fillStyle = this.color;
+          ctx.fill();
+        }
+      };
+    }
+
+    function createFirework() {
+      const x = Math.random() * canvas.width;
+      const y = Math.random() * canvas.height / 2;
+      const color = hsl(${Math.random() * 360}, 100%, 70%);
+      for (let i = 0; i < 30; i++) {
+        particles.push(FireworkParticle(x, y, color));
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach((p, i) => {
+        p.update();
+        p.draw();
+        if (p.alpha <= 0) particles.splice(i, 1);
+      });
+      requestAnimationFrame(animate);
+    }
+
+    setInterval(createFirework, 2000);
+    animate();
+    updateCountdown();
+  </script>
 </body>
 </html>
+
+
