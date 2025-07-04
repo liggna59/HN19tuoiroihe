@@ -272,31 +272,34 @@
       }
     };
 
-    function updateCountdown() {
-      const targetDate = new Date("2025-07-06T00:00:00").getTime();
-      const cd = document.getElementById("countdown");
-      const interval = setInterval(() => {
-// 👉 DÒNG GIẢ LẬP THỜI GIAN – chỉnh ngày/giờ tại đây
-let fakeNow = new Date("2025-07-05T23:59:00").getTime(); // 👈 bạn sửa giờ ở đây để test
+function updateCountdown() {
+  const targetDate = new Date("2025-07-06T00:00:00").getTime();
+  const cd = document.getElementById("countdown");
 
-const now = fakeNow; // dùng thời gian giả lập
-        const distance = targetDate - now;
-        if (distance <= 0) {
-          clearInterval(interval);
-          cd.textContent = "🎉 Hết giờ! Nhấn để bắt đầu 🎉";
-          cd.onclick = () => nextPage(1);
-          cd.style.cursor = "pointer";
-        } else {
-          const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-          const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-          const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-          const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-          cd.textContent = `${days} ngày ${hours} giờ ${minutes} phút ${seconds} giây`;
-          fakeNow += 1000; // 👉 tăng 1 giây mỗi lần chạy, để thời gian trôi giả lập
+  // 👇 Tạo biến giả lập bên ngoài setInterval để có thể tăng dần
+  let fakeNow = new Date("2025-07-05T23:59:00").getTime(); // ⏱ bạn chỉnh ngày giờ test ở đây
 
-        }
-      }, 1000);
+  const interval = setInterval(() => {
+    const now = fakeNow; // dùng thời gian giả lập
+    const distance = targetDate - now;
+
+    if (distance <= 0) {
+      clearInterval(interval);
+      cd.textContent = "🎉 Hết giờ! Nhấn để bắt đầu 🎉";
+      cd.onclick = () => nextPage(1);
+      cd.style.cursor = "pointer";
+    } else {
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      cd.textContent = `${days} ngày ${hours} giờ ${minutes} phút ${seconds} giây`;
     }
+
+    // ⏳ Cập nhật thời gian giả lập mỗi giây
+    fakeNow += 1000;
+  }, 1000);
+}
 
     for (let i = 0; i < 80; i++) {
       const sparkle = document.createElement('div');
