@@ -10,8 +10,43 @@
       padding: 0;
       overflow: hidden;
       font-family: 'Dancing Script', cursive;
-      background: linear-gradient(135deg, #e0bbf7, #c2e4ff);
     }
+
+    #background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: url('bg.png') no-repeat center center fixed;
+      background-size: cover;
+      z-index: -2;
+      animation: animateBg 15s infinite linear;
+      filter: brightness(0.9) contrast(1.1);
+    }
+
+    @keyframes animateBg {
+      0% { background-position: 0% 0%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 0%; }
+    }
+
+    .bling {
+      position: fixed;
+      width: 6px;
+      height: 6px;
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 0 8px white;
+      animation: blink 2s infinite ease-in-out;
+      z-index: -1;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 0.1; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.4); }
+    }
+
     .page {
       position: absolute;
       top: 0; left: 0;
@@ -74,13 +109,28 @@
   </style>
 </head>
 <body>
+  <div id="background"></div>
+
+  <!-- Bling-bling ánh sáng -->
+  <script>
+    for (let i = 0; i < 80; i++) {
+      const sparkle = document.createElement('div');
+      sparkle.className = 'bling';
+      sparkle.style.left = Math.random() * 100 + 'vw';
+      sparkle.style.top = Math.random() * 100 + 'vh';
+      sparkle.style.animationDelay = (Math.random() * 4) + 's';
+      sparkle.style.opacity = Math.random();
+      document.body.appendChild(sparkle);
+    }
+  </script>
+
   <audio id="bg-music" loop>
     <source src="be-friend-forever.mp3" type="audio/mp3">
   </audio>
 
   <!-- Trang 1 -->
   <div class="page show" id="page1">
-    <h2>🎈 19 tuổi rồi hè! Nhấn vào đây nè 🎈</h2>
+    <h2>🎈 19 tuổi rồi nhể! Nhanh thế! Nhấn vào đây nè 🎈</h2>
     <button class="btn" onclick="nextPage(2)">Nhấn vào đây đi</button>
   </div>
 
@@ -100,7 +150,6 @@
   <canvas class="firework" id="fireworks"></canvas>
 
   <script>
-    // Hiệu ứng rơi hoa, tuyết, sao (gộp lại từ nhiều hàm riêng lẻ)
     function createFalling(symbol, duration) {
       const el = document.createElement('div');
       el.className = 'falling';
@@ -115,15 +164,14 @@
     setInterval(() => createFalling("❄️", 10 + Math.random() * 10), 900);
     setInterval(() => createFalling("⭐", 5 + Math.random() * 8), 500);
 
-    // Logic nhấn 5 lần trang 2 mới qua
     let teaseCount = 0;
     function teaseClick() {
       const text = [
         "😏 Nhấn tiếp nữa đi 😏",
-        "🙄 Vẫn chưa xong đâu 🙄",
-        "😝 Gần tới rồi 😝",
-        "🤭 Lần cuối nha 🤭",
-        "🥳 Ok vào nội dung chính nào! 🥳"
+        "🙄 Đã chạm vào đâu, đã làm gì đâu, ơ kìa tiếp đi 🙄",
+        "😝 Chắc cũng cũng đó, nốt đi, lần cuối rồi 😝",
+        "🤭 Hãy sống kiên nhẫn lên nèo, kiên nhẫn là tốt, là liều thuốc cho sức khỏe và tinh thần chạy deadline 🤭",
+        "🥳 Roài vào nội dung chính đê nhỉnhỉ 🥳"
       ];
       document.getElementById("teaseText").innerText = text[teaseCount];
       teaseCount++;
@@ -151,42 +199,41 @@
       }, 200);
     }
 
-    // Gõ từng dòng lời chúc
     const blessingLines = [
-  "Hôm nay trời xanh mây trắng nắng vàng, là sn của HN🎉",
-  "19 tuổi rồi đó, nhanh thế (vẫn đang tự thấy shock)💜",
-  "Chúc HN thiệt nhiều niềm vui, hạnh phúc và yêu thương",
-  "Luôn dịu dàng, nhưng cũng mạnh mẽ khi cần nha",
-  "Bạn là một người đặc biệt – với chính bạn và với mình nữa",
-  "Mong bạn luôn sống thật với lòng mình, không cần gồng gánh quá nhiều nữa",
-  "Cười nhiều hơn nữa, vui nhiều chút",
-  "Ờm vẫn chịu được tính sáng nắng chiều mưa tối hên xui của mình",
-  "Xin kảm ơn",
-  "Dù mình không ở gần – nhưng mà yên tâm, vẫn nhớ HN",
-  "Thật sự may mắn vì gặp đc HN :>>>",
-  "Lâu lâu thấy như mẹ thật -.-",
-  "Nhưng mà do đó chắc chắn HN là duy nhất :D thân nhất",
-  "Nên chắc chắn là HN xứng đáng với thật nhiều điều tốt đẹp :3",
-  "Khi mệt mỏi thì hãy nghỉ ngơi đê",
-  "Ăn tốt ngủ ngon ngủ đúng giờ bảo toàn long thể",
-  "Ở hơi xa nên cũng mong ai đấy update nhiều tý còn biết tình hình",
-  "Cũng mong sẽ luôn tỏa sáng với ánh Dương :DDDDDD",
-  "19 tuổi rồi he, ơ hết năm nhất r à -.-",
-  "Tiếp tục vững bước trên con đường đã chọn nhé ._.",
-  "Chúc cho 19 tuổi mỗi ngày một niềm vui, ngày nèo cũng dui",
-  "Ncl happy happy birthday",
-  "BFF",
-  "Sống vui sống khỏe sống an nhàn",
-  "Nguyện mọi điều đẹp đẽ nhất sẽ tới với HN",
-  "Ờm đánh đổi bằng độ khó các môn chuyên ngành ở bkhoa nha :))",
-  "Hy vọng chúng mình mãi là bạn thân nhất :D",
-  "Hết rồi",
-  "Trong trường hợp xấu nhất thì code này nó sẽ bị ngu",
-  "Thông cảm người học lần đầu",
-  "Chờ khi nào giỏi hơn sẽ thử làm tý IOT :>>",
-  "May your days be filled with joy and your nights with gentle dreams",
-  "Tận hưởng đi vì nốt năm nữa U30 rồi đó :D"
-]; // giống như bản bạn gửi
+      "Hôm nay trời xanh mây trắng nắng vàng, là sn của HN🎉",
+      "19 tuổi rồi đó, nhanh thế (vẫn đang tự thấy shock)💜",
+      "Chúc HN thiệt nhiều niềm vui, hạnh phúc và yêu thương",
+      "Luôn dịu dàng, nhưng cũng mạnh mẽ khi cần nha",
+      "Bạn là một người đặc biệt – với chính bạn và với mình nữa",
+      "Mong bạn luôn sống thật với lòng mình, không cần gồng gánh quá nhiều nữa",
+      "Cười nhiều hơn nữa, vui nhiều chút",
+      "Ờm vẫn chịu được tính sáng nắng chiều mưa tối hên xui của mình",
+      "Xin kảm ơn",
+      "Dù mình không ở gần – nhưng mà yên tâm, vẫn nhớ HN",
+      "Thật sự may mắn vì gặp đc HN :>>>",
+      "Lâu lâu thấy như mẹ thật -.-",
+      "Nhưng mà do đó chắc chắn HN là duy nhất :D thân nhất",
+      "Nên chắc chắn là HN xứng đáng với thật nhiều điều tốt đẹp :3",
+      "Khi mệt mỏi thì hãy nghỉ ngơi đê",
+      "Ăn tốt ngủ ngon ngủ đúng giờ bảo toàn long thể",
+      "Ở hơi xa nên cũng mong ai đấy update nhiều tý còn biết tình hình",
+      "Cũng mong sẽ luôn tỏa sáng với ánh Dương :DDDDDD",
+      "19 tuổi rồi he, ơ hết năm nhất r à -.-",
+      "Tiếp tục vững bước trên con đường đã chọn nhé ._.",
+      "Chúc cho 19 tuổi mỗi ngày một niềm vui, ngày nèo cũng dui",
+      "Ncl happy happy birthday",
+      "BFF",
+      "Sống vui sống khỏe sống an nhàn",
+      "Nguyện mọi điều đẹp đẽ nhất sẽ tới với HN",
+      "Ờm đánh đổi bằng độ khó các môn chuyên ngành ở bkhoa nha :))",
+      "Hy vọng chúng mình mãi là bạn thân nhất :D",
+      "Hết rồi",
+      "Trong trường hợp xấu nhất thì code này nó sẽ bị ngu",
+      "Thông cảm người học lần đầu",
+      "Chờ khi nào giỏi hơn sẽ thử làm tý IOT :>>",
+      "May your days be filled with joy and your nights with gentle dreams",
+      "Tận hưởng đi vì nốt năm nữa U30 rồi đó :D"
+    ];
     let currentLine = 0;
     function startTyping() {
       const box = document.getElementById("blessing-box");
@@ -212,7 +259,6 @@
       typeLine();
     }
 
-    // Hiệu ứng pháo bông (giữ nguyên nhưng rút gọn chút logic)
     const canvas = document.getElementById("fireworks");
     const ctx = canvas.getContext("2d");
     canvas.width = window.innerWidth;
