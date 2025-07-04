@@ -130,7 +130,13 @@
       margin-bottom: 40px;
       text-align: center;
       position: relative;
-      top: 40px;
+      top: 40px; /* Hạ tiêu đề xuống */
+      color: white; /* Đổi màu trắng */
+    }
+
+    #blessing-box p {
+      font-size: 28px; /* Tăng 2 cỡ chữ */
+      color: white;
     }
   </style>
 </head>
@@ -158,7 +164,7 @@
 
   <div class="page" id="page3">
     <h2 class="title">🎂 HAPPY HAPPY HAPPY BIRTHDAY 🎂</h2>
-    <div id="blessing-box" style="max-width: 600px; margin: auto;"></div>
+    <div id="blessing-box" style="max-width: 700px; margin: auto;"></div>
   </div>
 
   <script>
@@ -198,29 +204,6 @@
       "Tận hưởng đi vì nốt năm nữa U30 rồi đó :D"
     ];
 
-    function startTyping() {
-      const box = document.getElementById("blessing-box");
-      let currentLine = 0;
-      function typeLine() {
-        if (currentLine >= blessingLines.length) return;
-        const p = document.createElement("p");
-        let text = blessingLines[currentLine];
-        let i = 0;
-        box.innerHTML = "";
-        box.appendChild(p);
-        const interval = setInterval(() => {
-          p.textContent += text[i];
-          i++;
-          if (i >= text.length) {
-            clearInterval(interval);
-            currentLine++;
-            setTimeout(typeLine, 2000);
-          }
-        }, 40);
-      }
-      typeLine();
-    }
-
     const teaseLines = [
       "😏 Hnhu bị lỗi rồi đó, tiếp đi 😏",
       "🙄 Thấy cũng cũng rồi đó, chắc do non tay load hơi lâu 🙄",
@@ -249,6 +232,29 @@
       document.getElementById(`page${n}`).classList.add('show');
     }
 
+    function startTyping() {
+      const box = document.getElementById("blessing-box");
+      let currentLine = 0;
+      function typeLine() {
+        if (currentLine >= blessingLines.length) return;
+        const p = document.createElement("p");
+        let text = blessingLines[currentLine];
+        let i = 0;
+        box.innerHTML = "";
+        box.appendChild(p);
+        const interval = setInterval(() => {
+          p.textContent += text[i];
+          i++;
+          if (i >= text.length) {
+            clearInterval(interval);
+            currentLine++;
+            setTimeout(typeLine, 2000);
+          }
+        }, 40);
+      }
+      typeLine();
+    }
+
     function playMusic() {
       const audio = document.getElementById('bg-music');
       audio.volume = 0;
@@ -271,13 +277,6 @@
         this.textContent = "🔇 Đã tắt nhạc";
       }
     };
-
-    function updateCountdown() {
-      const cd = document.getElementById("countdown");
-      cd.textContent = "🎉 Hết giờ! Nhấn để bắt đầu 🎉";
-      cd.onclick = () => nextPage(1);
-      cd.style.cursor = "pointer";
-    }
 
     for (let i = 0; i < 80; i++) {
       const sparkle = document.createElement('div');
@@ -352,7 +351,6 @@
       requestAnimationFrame(animate);
     }
 
-    updateCountdown();
     setInterval(createFirework, 2000);
     animate();
   </script>
