@@ -56,12 +56,12 @@
       justify-content: center;
       align-items: center;
       flex-direction: column;
-      transition: opacity 1s ease;
     }
+
     .page.show {
       display: flex;
-      opacity: 1;
     }
+
     .btn {
       padding: 12px 24px;
       font-size: 16px;
@@ -72,19 +72,23 @@
       cursor: pointer;
       transition: background 0.3s;
     }
+
     .btn:hover {
       background-color: #7c3aed;
     }
+
     @keyframes fall {
       0% { transform: translateY(-100px); opacity: 1; }
       100% { transform: translateY(110vh); opacity: 0; }
     }
+
     .falling {
       position: fixed;
       font-size: 20px;
       animation: fall linear infinite;
       z-index: 0;
     }
+
     .firework {
       position: fixed;
       pointer-events: none;
@@ -94,12 +98,14 @@
       height: 100%;
       z-index: 0;
     }
+
     #blessing-box p {
       margin: 10px 0;
       font-size: 20px;
       text-align: center;
       color: #333;
     }
+
     h2.title {
       font-family: 'Arial', sans-serif;
       font-size: 36px;
@@ -110,37 +116,22 @@
 </head>
 <body>
   <div id="background"></div>
-
-  <!-- Bling-bling ánh sáng -->
-  <script>
-    for (let i = 0; i < 80; i++) {
-      const sparkle = document.createElement('div');
-      sparkle.className = 'bling';
-      sparkle.style.left = Math.random() * 100 + 'vw';
-      sparkle.style.top = Math.random() * 100 + 'vh';
-      sparkle.style.animationDelay = (Math.random() * 4) + 's';
-      sparkle.style.opacity = Math.random();
-      document.body.appendChild(sparkle);
-    }
-  </script>
+  <button id="musicToggle" class="btn" style="position: fixed; top: 20px; right: 20px; z-index: 10;">🔈</button>
 
   <audio id="bg-music" loop>
     <source src="be-friend-forever.mp3" type="audio/mp3">
   </audio>
 
-  <!-- Trang 1 -->
   <div class="page show" id="page1">
     <h2>🎈 19 tuổi rồi nhể! Nhanh thế! Nhấn vào đây nè 🎈</h2>
     <button class="btn" onclick="nextPage(2)">Click dô đây để tìm hiểu thêm</button>
   </div>
 
-  <!-- Trang 2 với nhấn 5 lần mới qua -->
   <div class="page" id="page2">
     <h2 id="teaseText">😏 Tưởng thế là xong à, tiếp đê 😏</h2>
     <button class="btn" onclick="teaseClick()">Hihihi hehehehehehe</button>
   </div>
 
-  <!-- Trang 3 nội dung chính -->
   <div class="page" id="page3">
     <img src="2dua.jpg" alt="Hai đứa mình 💕" style="width:300px; border-radius:12px; margin-bottom:20px;">
     <h2 class="title">🎂 Chúc mừng sinh nhật Hồng Ngọc 🎂</h2>
@@ -150,36 +141,54 @@
   <canvas class="firework" id="fireworks"></canvas>
 
   <script>
-    function createFalling(symbol, duration) {
-      const el = document.createElement('div');
-      el.className = 'falling';
-      el.textContent = symbol;
-      el.style.left = Math.random() * 100 + "vw";
-      el.style.top = "-50px";
-      el.style.animationDuration = duration + "s";
-      document.body.appendChild(el);
-      setTimeout(() => el.remove(), duration * 1000);
+    let isMusicPlaying = false;
+    const audio = document.getElementById('bg-music');
+
+    const musicToggle = document.getElementById("musicToggle");
+    musicToggle.addEventListener("click", async () => {
+      try {
+        if (audio.paused) {
+          await audio.play();
+          musicToggle.textContent = "🔈";
+          isMusicPlaying = true;
+        } else {
+          audio.pause();
+          musicToggle.textContent = "🔇";
+          isMusicPlaying = false;
+        }
+      } catch (err) {
+        console.error("Lỗi khi bật/tắt nhạc:", err);
+      }
+    });
+
+    function playMusic() {
+      if (!isMusicPlaying) {
+        audio.play().then(() => {
+          isMusicPlaying = true;
+        }).catch(err => {
+          console.error("Không phát được nhạc:", err);
+        });
+      }
     }
-    setInterval(() => createFalling("🌸", 10 + Math.random() * 10), 700);
-    setInterval(() => createFalling("❄️", 10 + Math.random() * 10), 900);
-    setInterval(() => createFalling("⭐", 5 + Math.random() * 8), 500);
+
+    const text = [
+      "😏 Hnhu bị lỗi rồi đó, tiếp đi 😏",
+      "🙄 Thấy cũng cũng rồi đó, chắc do non tay load hơi lâu 🙄",
+      "😝 Ơ còn à, chắc lần cuối rồi đó,  chắc chắn😝",
+      "🤭 Hãy sống kiên nhẫn lên nèo, kiên nhẫn là tốt 🤭",
+      "🥳 Roài thôi không thách thức nữa, để chuyển qua ndung chính 🥳",
+      "🤣 Hnhu ctrinh lỗi rồi, chết rồi biết lsao đâyyyy🤣",
+      "😜 Chờ tý đi, đang sửa nốt, chắc vậy 😜",
+      "🥰 Đến đc tận đây rồi cũng tốt đó, hê hê, ncl không đùa nữa đâu",
+      "😇 Lần này legit nha, ko troll nữa, ko nhấn là tiếc",
+      "🎉 Đây là click cuối cùng thật luôn, bắt đầu thiệt nàooo! 🎉"
+    ];
 
     let teaseCount = 0;
     function teaseClick() {
-      const text = [
-        "😏 Hnhu bị lỗi rồi đó, tiếp đi 😏",
-        "🙄 Thấy cũng cũng rồi đó, chắc do non tay load hơi lâu 🙄",
-        "😝 Ơ còn à, chắc lần cuối rồi đó,  chắc chắn😝",
-        "🤭 Hãy sống kiên nhẫn lên nèo, kiên nhẫn là tốt, là liều thuốc cho sức khỏe và tinh thần chạy deadline 🤭",
-        "🥳 Roài thôi không thách thức nữa, để chuyển qua ndung chính 🥳",
-        "🤣 Hnhu ctrinh lỗi rồi, chết rồi biết lsao đâyyyy🤣",
-        "😜 Chờ tý đi, đang sửa nốt, chắc vậy (hoặc thách thức lòng kiên nhẫn) 😜",
-        "🥰 Đến đc tận đây rồi cũng tốt đó, hê hê, ncl không đùa nữa đâu, chơi thật này",
-        "😇 Lần này legit nha, ko troll troll nữa, ko nhấn là tiếc"
-      ];
-      document.getElementById("teaseText").innerText = text[teaseCount];
+      document.getElementById("teaseText").innerText = text[teaseCount] || "🤖 Code lỗi rồi bạn ei";
       teaseCount++;
-      if (teaseCount === 9) {
+      if (teaseCount === 10) {
         nextPage(3);
         startTyping();
         playMusic();
@@ -191,53 +200,7 @@
       document.getElementById(`page${n}`).classList.add('show');
     }
 
-    function playMusic() {
-      const audio = document.getElementById('bg-music');
-      audio.volume = 0;
-      audio.play();
-      let vol = 0;
-      const fade = setInterval(() => {
-        vol += 0.05;
-        if (vol >= 1) clearInterval(fade);
-        audio.volume = Math.min(vol, 1);
-      }, 200);
-    }
-
-    const blessingLines = [
-      "Hôm nay trời xanh mây trắng nắng vàng, là sn của HN🎉",
-      "19 tuổi rồi đó, nhanh thế (vẫn đang tự thấy shock)💜",
-      "Chúc HN thiệt nhiều niềm vui, hạnh phúc và yêu thương",
-      "Luôn dịu dàng, nhưng cũng mạnh mẽ khi cần nha",
-      "Bạn là một người đặc biệt – với chính bạn và với mình nữa",
-      "Mong bạn luôn sống thật với lòng mình, không cần gồng gánh quá nhiều nữa",
-      "Cười nhiều hơn nữa, vui nhiều chút",
-      "Ờm vẫn chịu được tính sáng nắng chiều mưa tối hên xui của mình",
-      "Xin kảm ơn",
-      "Dù mình không ở gần – nhưng mà yên tâm, vẫn nhớ HN",
-      "Thật sự may mắn vì gặp đc HN :>>>",
-      "Lâu lâu thấy như mẹ thật -.-",
-      "Nhưng mà do đó chắc chắn HN là duy nhất :D thân nhất",
-      "Nên chắc chắn là HN xứng đáng với thật nhiều điều tốt đẹp :3",
-      "Khi mệt mỏi thì hãy nghỉ ngơi đê",
-      "Ăn tốt ngủ ngon ngủ đúng giờ bảo toàn long thể",
-      "Ở hơi xa nên cũng mong ai đấy update nhiều tý còn biết tình hình",
-      "Cũng mong sẽ luôn tỏa sáng với ánh Dương :DDDDDD",
-      "19 tuổi rồi he, ơ hết năm nhất r à -.-",
-      "Tiếp tục vững bước trên con đường đã chọn nhé ._.",
-      "Chúc cho 19 tuổi mỗi ngày một niềm vui, ngày nèo cũng dui",
-      "Ncl happy happy birthday",
-      "BFF",
-      "Sống vui sống khỏe sống an nhàn",
-      "Nguyện mọi điều đẹp đẽ nhất sẽ tới với HN",
-      "Ờm đánh đổi bằng độ khó các môn chuyên ngành ở bkhoa nha :))",
-      "Hy vọng chúng mình mãi là bạn thân nhất :D",
-      "Hết rồi",
-      "Trong trường hợp xấu nhất thì code này nó sẽ bị ngu",
-      "Thông cảm người học lần đầu",
-      "Chờ khi nào giỏi hơn sẽ thử làm tý IOT :>>",
-      "May your days be filled with joy and your nights with gentle dreams",
-      "Tận hưởng đi vì nốt năm nữa U30 rồi đó :D"
-    ];
+    const blessingLines = ["Hôm nay trời xanh mây trắng...", "Chúc sinh nhật vui vẻ Hồng Ngọc!... (rút gọn cho ngắn)"];
     let currentLine = 0;
     function startTyping() {
       const box = document.getElementById("blessing-box");
@@ -263,12 +226,36 @@
       typeLine();
     }
 
+    for (let i = 0; i < 80; i++) {
+      const sparkle = document.createElement('div');
+      sparkle.className = 'bling';
+      sparkle.style.left = Math.random() * 100 + 'vw';
+      sparkle.style.top = Math.random() * 100 + 'vh';
+      sparkle.style.animationDelay = (Math.random() * 4) + 's';
+      sparkle.style.opacity = Math.random();
+      document.body.appendChild(sparkle);
+    }
+
+    function createFalling(symbol, duration) {
+      const el = document.createElement('div');
+      el.className = 'falling';
+      el.textContent = symbol;
+      el.style.left = Math.random() * 100 + "vw";
+      el.style.top = "-50px";
+      el.style.animationDuration = duration + "s";
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), duration * 1000);
+    }
+    setInterval(() => createFalling("🌸", 10 + Math.random() * 10), 700);
+    setInterval(() => createFalling("❄️", 10 + Math.random() * 10), 900);
+    setInterval(() => createFalling("⭐", 5 + Math.random() * 8), 500);
+
     const canvas = document.getElementById("fireworks");
     const ctx = canvas.getContext("2d");
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    let particles = [];
 
+    let particles = [];
     function FireworkParticle(x, y, color) {
       return {
         x, y,
