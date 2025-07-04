@@ -327,7 +327,21 @@
     document.getElementById('music').style.display = 'flex';
   }
 
-  function showCard() {
+const messages = [
+  "😏 Nhấn tiếp đê 😏",
+  "😗 Đã đc đâu mà 😗",
+  "😶 Nào, còn lần nữa 😶",
+  "😵 Thêm phát nữa đi 😵",
+  "🥳 Ok... đây là nội dung :D 🥳"
+];
+
+let clickCount = 0;
+
+function showCard() {
+  if (clickCount < messages.length - 1) {
+    clickCount++;
+    document.querySelector('#music h1').textContent = messages[clickCount];
+  } else {
     const audio = document.getElementById('bg-music');
     audio.volume = 0;
     audio.play();
@@ -342,6 +356,11 @@
       }
     }, 100);
 
+    document.getElementById('music').style.display = 'none';
+    document.getElementById('card').classList.add('active');
+    setTimeout(typeNextChar, 500);
+  }
+}
     document.getElementById('music').style.display = 'none';
     document.getElementById('card').classList.add('active');
     setTimeout(typeNextChar, 500);
