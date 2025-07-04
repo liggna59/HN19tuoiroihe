@@ -114,10 +114,46 @@
       margin: 10px;
       text-shadow: 2px 2px 4px #000000;
     }
+
+    #countdown {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 18px;
+      color: #fff;
+      background: rgba(0,0,0,0.4);
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-family: Arial, sans-serif;
+    }
   </style>
 </head>
 <body>
   <div id="background"></div>
+  <div id="countdown"></div>
+
+  <audio id="bg-music" loop>
+    <source src="be-friend-forever.mp3" type="audio/mp3">
+  </audio>
+
+  <div class="page show" id="page1">
+    <h2>🎈 19 tuổi rồi nhể! Nhanh thế! Nhấn vào đây nè 🎈</h2>
+    <button class="btn" onclick="nextPage(2)">Click dô đây để tìm hiểu thêm</button>
+  </div>
+
+  <div class="page" id="page2">
+    <h2 id="teaseText">😏 Tưởng thế là xong à, tiếp đê 😏</h2>
+    <button class="btn" onclick="teaseClick()">Hihihi hehehehehehe</button>
+  </div>
+
+  <div class="page" id="page3">
+    <img src="2dua.jpg" alt="Hai đứa mình 💕" style="width:300px; border-radius:12px; margin-bottom:20px;">
+    <h2 class="title">🎂 HAPPY BIRTHDAY! WISHING YOU A DAY FILLED WITH JOY, LAUGHTER, AND EVERYTHING THAT MAKES YOU HAPPY 🎂</h2>
+    <div id="blessing-box" style="max-width: 600px;"></div>
+  </div>
+
+  <canvas class="firework" id="fireworks"></canvas>
+
   <script>
     for (let i = 0; i < 80; i++) {
       const sparkle = document.createElement('div');
@@ -128,25 +164,24 @@
       sparkle.style.opacity = Math.random();
       document.body.appendChild(sparkle);
     }
-  </script>
-  <audio id="bg-music" loop>
-    <source src="be-friend-forever.mp3" type="audio/mp3">
-  </audio>
-  <div class="page show" id="page1">
-    <h2>🎈 19 tuổi rồi nhể! Nhanh thế! Nhấn vào đây nè 🎈</h2>
-    <button class="btn" onclick="nextPage(2)">Click dô đây để tìm hiểu thêm</button>
-  </div>
-  <div class="page" id="page2">
-    <h2 id="teaseText">😏 Tưởng thế là xong à, tiếp đê 😏</h2>
-    <button class="btn" onclick="teaseClick()">Hihihi hehehehehehe</button>
-  </div>
-  <div class="page" id="page3">
-    <img src="2dua.jpg" alt="Hai đứa mình 💕" style="width:300px; border-radius:12px; margin-bottom:20px;">
-    <h2 class="title">🎂 Chúc mừng sinh nhật Hồng Ngọc 🎂</h2>
-    <div id="blessing-box" style="max-width: 600px;"></div>
-  </div>
-  <canvas class="firework" id="fireworks"></canvas>
-  <script>
+
+    function updateCountdown() {
+      const targetDate = new Date("2025-07-06T00:00:00").getTime();
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+      if (distance < 0) {
+        document.getElementById("countdown").textContent = "🎉 Đến ngày sinh nhật rồi nè!";
+        return;
+      }
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      document.getElementById("countdown").textContent = `🎂 Còn ${days} ngày ${hours} giờ ${minutes} phút ${seconds} giây tới sinh nhật 🎂`;
+    }
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
     function createFalling(symbol, duration) {
       const el = document.createElement('div');
       el.className = 'falling';
@@ -190,8 +225,14 @@
 
     function playMusic() {
       const audio = document.getElementById('bg-music');
-      audio.volume = 0.5;
-      audio.play().catch(err => console.warn("Không thể tự động phát nhạc:", err));
+      audio.volume = 0;
+      audio.play();
+      let vol = 0;
+      const fade = setInterval(() => {
+        vol += 0.05;
+        if (vol >= 1) clearInterval(fade);
+        audio.volume = Math.min(vol, 1);
+      }, 200);
     }
 
     const blessingLines = [
