@@ -124,6 +124,15 @@
       font-size: 16px;
       cursor: pointer;
     }
+
+    .title {
+      font-family: 'Arial', sans-serif;
+      font-size: 36px;
+      color: #ffffff;
+      margin: 10px;
+      text-shadow: 2px 2px 4px #000000;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -149,30 +158,24 @@
   </div>
 
   <div class="page" id="page3">
-    <h2 class="title">🎂 HAPPY HAPPY HAPPY BIRTHDAY 🎂</h2>
     <div id="blessing-box" style="max-width: 600px; margin: auto;"></div>
+    <h2 class="title" style="margin-top: 20px;">🎂 HAPPY HAPPY HAPPY BIRTHDAY 🎂</h2>
   </div>
 
   <script>
-    const audio = document.getElementById('bg-music');
-    const toggleBtn = document.getElementById('audio-toggle');
-    toggleBtn.addEventListener('click', () => {
-      if (audio.paused) {
-        audio.play();
-        toggleBtn.textContent = '🔊 Bật/Tắt nhạc';
-      } else {
-        audio.pause();
-        toggleBtn.textContent = '🔇 Bật/Tắt nhạc';
-      }
-    });
-
-    for (let i = 0; i < 50; i++) {
-      const bling = document.createElement('div');
-      bling.className = 'bling';
-      bling.style.left = Math.random() * 100 + 'vw';
-      bling.style.top = Math.random() * 100 + 'vh';
-      document.body.appendChild(bling);
+    for (let i = 0; i < 80; i++) {
+      const sparkle = document.createElement('div');
+      sparkle.className = 'bling';
+      sparkle.style.left = Math.random() * 100 + 'vw';
+      sparkle.style.top = Math.random() * 100 + 'vh';
+      sparkle.style.animationDelay = (Math.random() * 4) + 's';
+      sparkle.style.opacity = Math.random();
+      document.body.appendChild(sparkle);
     }
+
+    setInterval(() => createFalling("🌸", 10 + Math.random() * 10), 700);
+    setInterval(() => createFalling("❄️", 10 + Math.random() * 10), 900);
+    setInterval(() => createFalling("⭐", 5 + Math.random() * 8), 500);
 
     function createFalling(symbol, duration) {
       const el = document.createElement('div');
@@ -184,75 +187,8 @@
       document.body.appendChild(el);
       setTimeout(() => el.remove(), duration * 1000);
     }
-    setInterval(() => createFalling("🌸", 10 + Math.random() * 10), 700);
-    setInterval(() => createFalling("❄️", 10 + Math.random() * 10), 900);
-    setInterval(() => createFalling("⭐", 5 + Math.random() * 8), 500);
 
-    const canvas = document.getElementById("fireworks");
-    const ctx = canvas.getContext("2d");
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    let particles = [];
-    function createFirework() {
-      const x = Math.random() * canvas.width;
-      const y = Math.random() * canvas.height / 2;
-      for (let i = 0; i < 50; i++) {
-        particles.push({
-          x: x,
-          y: y,
-          vx: Math.cos((i / 50) * 2 * Math.PI) * Math.random() * 3,
-          vy: Math.sin((i / 50) * 2 * Math.PI) * Math.random() * 3,
-          alpha: 1
-        });
-      }
-    }
-
-    function animateFireworks() {
-      ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      particles.forEach((p, index) => {
-        p.x += p.vx;
-        p.y += p.vy;
-        p.alpha -= 0.01;
-        ctx.fillStyle = `rgba(255,255,255,${p.alpha})`;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
-        ctx.fill();
-        if (p.alpha <= 0) particles.splice(index, 1);
-      });
-      requestAnimationFrame(animateFireworks);
-    }
-
-    setInterval(createFirework, 2500);
-    animateFireworks();
-
-    function nextPage(n) {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('show'));
-      document.getElementById(`page${n}`).classList.add('show');
-    }
-
-    function teaseClick() {
-      const text = [
-        "😏 Hnhu bị lỗi rồi đó, tiếp đi 😏",
-        "🙄 Thấy cũng cũng rồi đó, chắc do non tay load hơi lâu 🙄",
-        "😝 Ơ còn à, chắc lần cuối rồi đó,  chắc chắn😝",
-        "🤭 Hãy sống kiên nhẫn lên nèo, kiên nhẫn là tốt, là liều thuốc cho sức khỏe và tinh thần chạy deadline 🤭",
-        "🥳 Roài thôi không thách thức nữa, để chuyển qua ndung chính 🥳",
-        "🤣 Hnhu ctrinh lỗi rồi, chết rồi biết lsao đâyyyy🤣",
-        "😜 Chờ tý đi, đang sửa nốt, chắc vậy (hoặc thách thức lòng kiên nhẫn) 😜",
-        "🥰 Đến đc tận đây rồi cũng tốt đó, hê hê, ncl không đùa nữa đâu, chơi thật này",
-        "😇 Lần này legit nha, ko troll troll nữa, ko nhấn là tiếc"
-      ];
-      document.getElementById("teaseText").innerText = text[teaseCount];
-      teaseCount++;
-      if (teaseCount === text.length) {
-        nextPage(3);
-        startTyping();
-      }
-    }
-
-    const blessings = [
+    const blessingLines = [
       "Hôm nay trời xanh mây trắng nắng vàng, là sn của HN🎉",
       "19 tuổi rồi đó, nhanh thế (vẫn đang tự thấy shock)💜",
       "Chúc HN thiệt nhiều niềm vui, hạnh phúc và yêu thương",
@@ -291,20 +227,22 @@
     let currentLine = 0;
     function startTyping() {
       const box = document.getElementById("blessing-box");
-      box.innerHTML = "";
       function typeLine() {
-        if (currentLine >= blessings.length) return;
-        const text = blessings[currentLine];
+        if (currentLine >= blessingLines.length) return;
+        let text = blessingLines[currentLine];
         let i = 0;
         const p = document.createElement("p");
+        box.innerHTML = "";
         box.appendChild(p);
         const interval = setInterval(() => {
           p.textContent += text[i];
           i++;
           if (i >= text.length) {
             clearInterval(interval);
-            currentLine++;
-            setTimeout(typeLine, 2000);
+            setTimeout(() => {
+              currentLine++;
+              typeLine();
+            }, 2000);
           }
         }, 40);
       }
@@ -312,6 +250,43 @@
     }
 
     let teaseCount = 0;
+    function teaseClick() {
+      const text = [
+        "😏 Hnhu bị lỗi rồi đó, tiếp đi 😏",
+        "🙄 Thấy cũng cũng rồi đó, chắc do non tay load hơi lâu 🙄",
+        "😝 Ơ còn à, chắc lần cuối rồi đó,  chắc chắn😝",
+        "🤭 Hãy sống kiên nhẫn lên nèo, kiên nhẫn là tốt, là liều thuốc cho sức khỏe và tinh thần chạy deadline 🤭",
+        "🥳 Roài thôi không thách thức nữa, để chuyển qua ndung chính 🥳",
+        "🤣 Hnhu ctrinh lỗi rồi, chết rồi biết lsao đâyyyy🤣",
+        "😜 Chờ tý đi, đang sửa nốt, chắc vậy (hoặc thách thức lòng kiên nhẫn) 😜",
+        "🥰 Đến đc tận đây rồi cũng tốt đó, hê hê, ncl không đùa nữa đâu, chơi thật này",
+        "😇 Lần này legit nha, ko troll troll nữa, ko nhấn là tiếc"
+      ];
+      document.getElementById("teaseText").innerText = text[teaseCount];
+      teaseCount++;
+      if (teaseCount === 9) {
+        nextPage(3);
+        startTyping();
+        playMusic();
+      }
+    }
+
+    function playMusic() {
+      const audio = document.getElementById('bg-music');
+      audio.volume = 0;
+      audio.play();
+      let vol = 0;
+      const fade = setInterval(() => {
+        vol += 0.05;
+        if (vol >= 1) clearInterval(fade);
+        audio.volume = Math.min(vol, 1);
+      }, 200);
+    }
+
+    function nextPage(n) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('show'));
+      document.getElementById(`page${n}`).classList.add('show');
+    }
 
     function updateCountdown() {
       const targetDate = new Date("2025-07-06T00:00:00").getTime();
@@ -325,9 +300,10 @@
           cd.onclick = () => nextPage(1);
           cd.style.cursor = "pointer";
         } else {
-          const minutes = Math.floor(distance / 60000);
-          const seconds = Math.floor((distance % 60000) / 1000);
-          cd.textContent = `${minutes}m ${seconds}s`;
+          const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+          cd.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         }
       }, 1000);
     }
