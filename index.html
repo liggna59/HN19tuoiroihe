@@ -131,13 +131,13 @@
   <!-- Trang 1 -->
   <div class="page show" id="page1">
     <h2>🎈 19 tuổi rồi nhể! Nhanh thế! Nhấn vào đây nè 🎈</h2>
-    <button class="btn" onclick="nextPage(2)">Nhấn vào đây đi</button>
+    <button class="btn" onclick="nextPage(2)">Click dô đây để tìm hiểu thêm</button>
   </div>
 
   <!-- Trang 2 với nhấn 5 lần mới qua -->
   <div class="page" id="page2">
-    <h2 id="teaseText">😏 Tưởng thế là xong à, nhấn tiếp đi 😏</h2>
-    <button class="btn" onclick="teaseClick()">Nhấn tiếp</button>
+    <h2 id="teaseText">😏 Tưởng thế là xong à, tiếp đê 😏</h2>
+    <button class="btn" onclick="teaseClick()">Hihihi hehehehehehe</button>
   </div>
 
   <!-- Trang 3 nội dung chính -->
@@ -167,15 +167,19 @@
     let teaseCount = 0;
     function teaseClick() {
       const text = [
-        "😏 Nhấn tiếp nữa đi 😏",
-        "🙄 Đã chạm vào đâu, đã làm gì đâu, ơ kìa tiếp đi 🙄",
-        "😝 Chắc cũng cũng đó, nốt đi, lần cuối rồi 😝",
+        "😏 Hnhu bị lỗi rồi đó, tiếp đi 😏",
+        "🙄 Thấy cũng cũng rồi đó, chắc do non tay load hơi lâu 🙄",
+        "😝 Ơ còn à, chắc lần cuối rồi đó,  chắc chắn😝",
         "🤭 Hãy sống kiên nhẫn lên nèo, kiên nhẫn là tốt, là liều thuốc cho sức khỏe và tinh thần chạy deadline 🤭",
-        "🥳 Roài vào nội dung chính đê nhỉnhỉ 🥳"
+        "🥳 Roài thôi không thách thức nữa, để chuyển qua ndung chính 🥳",
+        "🤣 Hnhu ctrinh lỗi rồi, chết rồi biết lsao đâyyyy🤣",
+        "😜 Chờ tý đi, đang sửa nốt, chắc vậy (hoặc thách thức lòng kiên nhẫn) 😜",
+        "🥰 Đến đc tận đây rồi cũng tốt đó, hê hê, ncl không đùa nữa đâu, chơi thật này",
+        "😇 Lần này legit nha, ko troll troll nữa, ko nhấn là tiếc"
       ];
       document.getElementById("teaseText").innerText = text[teaseCount];
       teaseCount++;
-      if (teaseCount === 5) {
+      if (teaseCount === 9) {
         nextPage(3);
         startTyping();
         playMusic();
