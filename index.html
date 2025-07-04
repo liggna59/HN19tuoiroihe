@@ -47,21 +47,6 @@
       50% { opacity: 1; transform: scale(1.4); }
     }
 
-    .page {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100vw;
-      height: 100vh;
-      display: none;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-    }
-
-    .page.show {
-      display: flex;
-    }
-
     .btn {
       padding: 12px 24px;
       font-size: 16px;
@@ -77,9 +62,20 @@
       background-color: #7c3aed;
     }
 
-    @keyframes fall {
-      0% { transform: translateY(-100px); opacity: 1; }
-      100% { transform: translateY(110vh); opacity: 0; }
+    .page {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .page.show {
+      display: flex;
     }
 
     .falling {
@@ -87,6 +83,11 @@
       font-size: 20px;
       animation: fall linear infinite;
       z-index: 0;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(-100px); opacity: 1; }
+      100% { transform: translateY(110vh); opacity: 0; }
     }
 
     .firework {
@@ -102,7 +103,6 @@
     #blessing-box p {
       margin: 10px 0;
       font-size: 20px;
-      text-align: center;
       color: #ffffff;
       text-shadow: 1px 1px 3px #000000;
     }
@@ -181,20 +181,6 @@
     }
     updateCountdown();
     setInterval(updateCountdown, 1000);
-
-    function createFalling(symbol, duration) {
-      const el = document.createElement('div');
-      el.className = 'falling';
-      el.textContent = symbol;
-      el.style.left = Math.random() * 100 + "vw";
-      el.style.top = "-50px";
-      el.style.animationDuration = duration + "s";
-      document.body.appendChild(el);
-      setTimeout(() => el.remove(), duration * 1000);
-    }
-    setInterval(() => createFalling("🌸", 10 + Math.random() * 10), 700);
-    setInterval(() => createFalling("❄️", 10 + Math.random() * 10), 900);
-    setInterval(() => createFalling("⭐", 5 + Math.random() * 8), 500);
 
     let teaseCount = 0;
     function teaseClick() {
