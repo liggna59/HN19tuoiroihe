@@ -130,7 +130,7 @@
       margin-bottom: 40px;
       text-align: center;
       position: relative;
-      top: -20px;
+      top: 40px;
     }
   </style>
 </head>
@@ -143,7 +143,7 @@
   </audio>
 
   <div class="page show" id="page0">
-    <div id="countdown">Đang tính thời gian...</div>
+    <div id="countdown">🎉 Hết giờ! Nhấn để bắt đầu 🎉</div>
   </div>
 
   <div class="page" id="page1">
@@ -272,34 +272,12 @@
       }
     };
 
-function updateCountdown() {
-  const targetDate = new Date("2025-07-06T00:00:00").getTime();
-  const cd = document.getElementById("countdown");
-
-  // 👇 Tạo biến giả lập bên ngoài setInterval để có thể tăng dần
-  let fakeNow = new Date("2025-07-05T23:59:00").getTime(); // ⏱ bạn chỉnh ngày giờ test ở đây
-
-  const interval = setInterval(() => {
-    const now = fakeNow; // dùng thời gian giả lập
-    const distance = targetDate - now;
-
-    if (distance <= 0) {
-      clearInterval(interval);
+    function updateCountdown() {
+      const cd = document.getElementById("countdown");
       cd.textContent = "🎉 Hết giờ! Nhấn để bắt đầu 🎉";
       cd.onclick = () => nextPage(1);
       cd.style.cursor = "pointer";
-    } else {
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-      cd.textContent = `${days} ngày ${hours} giờ ${minutes} phút ${seconds} giây`;
     }
-
-    // ⏳ Cập nhật thời gian giả lập mỗi giây
-    fakeNow += 1000;
-  }, 1000);
-}
 
     for (let i = 0; i < 80; i++) {
       const sparkle = document.createElement('div');
@@ -374,9 +352,9 @@ function updateCountdown() {
       requestAnimationFrame(animate);
     }
 
+    updateCountdown();
     setInterval(createFirework, 2000);
     animate();
-    updateCountdown();
   </script>
 </body>
 </html>
