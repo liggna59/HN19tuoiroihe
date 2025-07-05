@@ -75,43 +75,38 @@
     .btn:hover {
       background-color: #7c3aed;
     }
-    @keyframes fall {
-      0% { transform: translateY(-100px); opacity: 1; }
-      100% { transform: translateY(110vh); opacity: 0; }
+
+    @keyframes float {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-100vh); opacity: 0; }
     }
-    .falling {
+    .bubble, .heart {
       position: fixed;
-      font-size: 20px;
-      animation: fall linear infinite;
+      bottom: 0;
+      animation: float linear infinite;
       z-index: 0;
     }
-    .firework {
-      position: fixed;
-      pointer-events: none;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-    }
-    #blessing-box p {
-      margin: 10px 0;
+    .bubble {
       font-size: 20px;
-      text-align: center;
-      color: #333;
+      color: #00f0ff;
     }
-    h2.title {
-      font-family: 'Arial', sans-serif;
-      font-size: 36px;
-      color: #ff4081;
-      margin: 10px;
+    .heart {
+      font-size: 24px;
+      color: pink;
+    }
+    .signature {
+      position: fixed;
+      bottom: 8px;
+      right: 12px;
+      color: white;
+      font-size: 14px;
+      opacity: 0.7;
     }
   </style>
 </head>
 <body>
   <div id="background"></div>
 
-  <!-- Bling-bling ánh sáng -->
   <script>
     for (let i = 0; i < 80; i++) {
       const sparkle = document.createElement('div');
@@ -122,98 +117,102 @@
       sparkle.style.opacity = Math.random();
       document.body.appendChild(sparkle);
     }
+
+    function createFloatingEmoji(emoji, className, intervalTime) {
+      setInterval(() => {
+        const el = document.createElement('div');
+        el.className = className;
+        el.textContent = emoji;
+        el.style.left = Math.random() * 100 + 'vw';
+        el.style.animationDuration = (3 + Math.random() * 3) + 's';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 6000);
+      }, intervalTime);
+    }
+    createFloatingEmoji('🎈', 'bubble', 800);
+    createFloatingEmoji('💖', 'heart', 1000);
   </script>
 
   <audio id="bg-music" loop>
     <source src="be-friend-forever.mp3" type="audio/mp3">
   </audio>
 
-  <!-- Trang 1 -->
-  <div class="page show" id="page1">
+  <div class="page show" id="countdownPage">
+    <h2 style="color: #f472b6; font-size: 28px; text-align:center">⏳ Còn lại bao lâu đến 6/7 đây nhỉ? ⏳</h2>
+    <h1 id="countdown6" style="font-size: 32px; color: white; margin: 20px;"></h1>
+    <button class="btn" onclick="nextPage(1)">Vô thiệp thui nào 🎉</button>
+  </div>
+
+  <div class="page" id="page1">
     <h2>🎈 19 tuổi rồi nhể! Nhanh thế! Nhấn vào đây nè 🎈</h2>
     <button class="btn" onclick="nextPage(2)">Click dô đây để tìm hiểu thêm</button>
   </div>
 
-  <!-- Trang 2 với nhấn 5 lần mới qua -->
   <div class="page" id="page2">
     <h2 id="teaseText">😏 Tưởng thế là xong à, tiếp đê 😏</h2>
     <button class="btn" onclick="teaseClick()">Hihihi hehehehehehe</button>
   </div>
 
-  <!-- Trang 3 nội dung chính -->
   <div class="page" id="page3">
     <img src="2dua.jpg" alt="Hai đứa mình 💕" style="width:300px; border-radius:12px; margin-bottom:20px;">
     <h2 class="title">🎂 Chúc mừng sinh nhật Hồng Ngọc 🎂</h2>
     <div id="blessing-box" style="max-width: 600px;"></div>
+    <h2 style="margin-top: 30px; color: #6b21a8;">⏳ Đếm ngược đến U30: <span id="countdown"></span></h2>
   </div>
 
+  <div class="signature">by ôligg</div>
   <canvas class="firework" id="fireworks"></canvas>
 
-  <script>
-    function createFalling(symbol, duration) {
-      const el = document.createElement('div');
-      el.className = 'falling';
-      el.textContent = symbol;
-      el.style.left = Math.random() * 100 + "vw";
-      el.style.top = "-50px";
-      el.style.animationDuration = duration + "s";
-      document.body.appendChild(el);
-      setTimeout(() => el.remove(), duration * 1000);
-    }
-    setInterval(() => createFalling("🌸", 10 + Math.random() * 10), 700);
-    setInterval(() => createFalling("❄️", 10 + Math.random() * 10), 900);
-    setInterval(() => createFalling("⭐", 5 + Math.random() * 8), 500);
+<script>
+  const pages = document.querySelectorAll('.page');
+  let currentPage = 0;
+  const music = document.getElementById('bg-music');
 
-    let teaseCount = 0;
-    function teaseClick() {
-      const text = [
-        "😏 Hnhu bị lỗi rồi đó, tiếp đi 😏",
-        "🙄 Thấy cũng cũng rồi đó, chắc do non tay load hơi lâu 🙄",
-        "😝 Ơ còn à, chắc lần cuối rồi đó,  chắc chắn😝",
-        "🤭 Hãy sống kiên nhẫn lên nèo, kiên nhẫn là tốt, là liều thuốc cho sức khỏe và tinh thần chạy deadline 🤭",
-        "🥳 Roài thôi không thách thức nữa, để chuyển qua ndung chính 🥳",
-        "🤣 Hnhu ctrinh lỗi rồi, chết rồi biết lsao đâyyyy🤣",
-        "😜 Chờ tý đi, đang sửa nốt, chắc vậy (hoặc thách thức lòng kiên nhẫn) 😜",
-        "🥰 Đến đc tận đây rồi cũng tốt đó, hê hê, ncl không đùa nữa đâu, chơi thật này",
-        "😇 Lần này legit nha, ko troll troll nữa, ko nhấn là tiếc"
-      ];
-      document.getElementById("teaseText").innerText = text[teaseCount];
-      teaseCount++;
-      if (teaseCount === 9) {
-        nextPage(3);
-        startTyping();
-        playMusic();
-      }
-    }
+  function nextPage(n) {
+    pages.forEach(p => p.classList.remove('show'));
+    document.getElementById('page' + n).classList.add('show');
+    currentPage = n;
+    if (n === 2 && music.paused) music.play();
+  }
 
-    function nextPage(n) {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('show'));
-      document.getElementById(`page${n}`).classList.add('show');
+  let clickCount = 0;
+  function teaseClick() {
+    clickCount++;
+    const teaseText = document.getElementById('teaseText');
+    const text = [
+      "😏 Hnhu bị lỗi rồi đó, tiếp đi 😏",
+      "🙄 Thấy cũng cũng rồi đó, chắc do non tay load hơi lâu 🙄",
+      "😝 Ơ còn à, chắc lần cuối rồi đó,  chắc chắn😝",
+      "🤭 Hãy sống kiên nhẫn lên nèo, kiên nhẫn là tốt, là liều thuốc cho sức khỏe và tinh thần chạy deadline 🤭",
+      "🥳 Roài thôi không thách thức nữa, để chuyển qua ndung chính 🥳",
+      "🤣 Hnhu ctrinh lỗi rồi, chết rồi biết lsao đâyyyy🤣",
+      "😜 Chờ tý đi, đang sửa nốt, chắc vậy (hoặc thách thức lòng kiên nhẫn) 😜",
+      "🥰 Đến đc tận đây rồi cũng tốt đó, hê hê, ncl không đùa nữa đâu, chơi thật này",
+      "😇 Lần này legit nha, ko troll troll nữa, ko nhấn là tiếc"
+    ];
+    if (clickCount <= text.length) {
+      teaseText.innerText = text[clickCount - 1];
     }
+ if (clickCount >= 9) {
+  nextPage(3);
+  setTimeout(() => {
+    startBlessing(); // Gọi sau khi page 3 đã hiện xong
+  }, 800);
+  startFireworks();
+}
+  }
 
-    function playMusic() {
-      const audio = document.getElementById('bg-music');
-      audio.volume = 0;
-      audio.play();
-      let vol = 0;
-      const fade = setInterval(() => {
-        vol += 0.05;
-        if (vol >= 1) clearInterval(fade);
-        audio.volume = Math.min(vol, 1);
-      }, 200);
-    }
-
-    const blessingLines = [
-      "Hôm nay trời xanh mây trắng nắng vàng, là sn của HN🎉",
-      "19 tuổi rồi đó, nhanh thế (vẫn đang tự thấy shock)💜",
+   const blessingLines = [
+      "Hôm nay trời xanh mây trắng nắng vàng, là sn của HN đó🎉",
+      "19 tuổi rồi đó, nhanh thế (ê vẫn đang tự thấy shock vì quá nhanh)",
       "Chúc HN thiệt nhiều niềm vui, hạnh phúc và yêu thương",
       "Luôn dịu dàng, nhưng cũng mạnh mẽ khi cần nha",
-      "Bạn là một người đặc biệt – với chính bạn và với mình nữa",
-      "Mong bạn luôn sống thật với lòng mình, không cần gồng gánh quá nhiều nữa",
+      "HN là một người đặc biệt – với chính bạn và với mình nữa",
+      "Mong bạn mình luôn sống thật với lòng mình, không cần gồng gánh quá nhiều nữa",
       "Cười nhiều hơn nữa, vui nhiều chút",
       "Ờm vẫn chịu được tính sáng nắng chiều mưa tối hên xui của mình",
       "Xin kảm ơn",
-      "Dù mình không ở gần – nhưng mà yên tâm, vẫn nhớ HN",
+      "Dù cta không ở gần – nhưng mà yên tâm, vẫn nhớ HN",
       "Thật sự may mắn vì gặp đc HN :>>>",
       "Lâu lâu thấy như mẹ thật -.-",
       "Nhưng mà do đó chắc chắn HN là duy nhất :D thân nhất",
@@ -238,81 +237,142 @@
       "May your days be filled with joy and your nights with gentle dreams",
       "Tận hưởng đi vì nốt năm nữa U30 rồi đó :D"
     ];
-    let currentLine = 0;
-    function startTyping() {
-      const box = document.getElementById("blessing-box");
-      function typeLine() {
-        if (currentLine >= blessingLines.length) return;
-        let text = blessingLines[currentLine];
-        let i = 0;
-        const p = document.createElement("p");
-        box.innerHTML = "";
-        box.appendChild(p);
-        const interval = setInterval(() => {
-          p.textContent += text[i];
-          i++;
-          if (i >= text.length) {
-            clearInterval(interval);
-            setTimeout(() => {
-              currentLine++;
-              typeLine();
-            }, 2000);
-          }
-        }, 40);
+function startBlessing() {
+  const box = document.getElementById('blessing-box');
+  let i = 0;
+
+  function typeLine(line, callback) {
+    const p = document.createElement('p');
+    p.style.margin = '10px 0';
+    p.style.fontSize = '20px';
+    p.style.color = '#fff';
+    p.style.textAlign = 'center';
+    p.style.opacity = '0';
+    p.style.transition = 'opacity 0.4s ease';
+
+    box.innerHTML = ''; // ❗ Xoá dòng cũ trước khi hiển thị dòng mới
+    box.appendChild(p);
+
+    let j = 0;
+    function typeChar() {
+      if (j === 0) p.style.opacity = '1';
+      if (j < line.length) {
+        p.textContent += line[j];
+        j++;
+        setTimeout(typeChar, 40);  // tốc độ đánh máy
+      } else {
+        // Đợi một chút rồi làm dòng mờ dần và gọi tiếp
+        setTimeout(() => {
+          p.style.opacity = '0'; // ẩn dòng
+          setTimeout(callback, 500); // gọi dòng sau khi dòng cũ mờ đi
+        }, 1800); // giữ dòng hiện 1.8s
       }
-      typeLine();
     }
 
-    const canvas = document.getElementById("fireworks");
-    const ctx = canvas.getContext("2d");
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    let particles = [];
+    typeChar();
+  }
 
-    function FireworkParticle(x, y, color) {
-      return {
-        x, y,
-        radius: 2,
-        color,
-        angle: Math.random() * 2 * Math.PI,
-        speed: Math.random() * 5 + 2,
-        alpha: 1,
-        update() {
-          this.x += Math.cos(this.angle) * this.speed;
-          this.y += Math.sin(this.angle) * this.speed + 1;
-          this.alpha -= 0.01;
-        },
-        draw() {
-          ctx.globalAlpha = this.alpha;
-          ctx.beginPath();
-          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-          ctx.fillStyle = this.color;
-          ctx.fill();
-        }
-      };
+  function showNextLine() {
+    if (i < blessingLines.length) {
+      typeLine(blessingLines[i], showNextLine);
+      i++;
     }
+  }
 
-    function createFirework() {
+  showNextLine();
+}
+
+  function updateCountdown() {
+    const now = new Date();
+    const nextBirthday = new Date(now.getFullYear() + 1, 6, 5);
+    const diff = nextBirthday - now;
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    const countdownText = `${days} ngày ${hours} giờ ${minutes} phút ${seconds} giây`;
+    document.getElementById('countdown').textContent = countdownText;
+  }
+
+  function updateCountdown6() {
+    const now = new Date();
+    const eventDate = new Date(now.getFullYear(), 6, 6);
+    if (now > eventDate) eventDate.setFullYear(now.getFullYear() + 1);
+    const diff = eventDate - now;
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+    document.getElementById('countdown6').textContent = `${days} ngày ${hours} giờ ${minutes} phút ${seconds} giây`;
+  }
+
+  setInterval(updateCountdown, 1000);
+  setInterval(updateCountdown6, 1000);
+  updateCountdown();
+  updateCountdown6();
+
+  const canvas = document.getElementById('fireworks');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const fireworks = [];
+  function randomColor() {
+    const r = Math.floor(Math.random() * 255);
+    const g = Math.floor(Math.random() * 255);
+    const b = Math.floor(Math.random() * 255);
+    return `rgb(${r},${g},${b})`;
+  }
+  class Firework {
+    constructor(x, y) {
+      this.x = x;
+      this.y = y;
+      this.particles = [];
+      this.color = randomColor();
+      for (let i = 0; i < 50; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 5 + 2;
+        const dx = Math.cos(angle) * speed;
+        const dy = Math.sin(angle) * speed;
+        this.particles.push({ x: this.x, y: this.y, dx, dy, alpha: 1 });
+      }
+    }
+    update() {
+      this.particles.forEach(p => {
+        p.x += p.dx;
+        p.y += p.dy;
+        p.alpha -= 0.01;
+      });
+    }
+    draw(ctx) {
+      this.particles.forEach(p => {
+        ctx.globalAlpha = p.alpha;
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    }
+  }
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    fireworks.forEach((fw, index) => {
+      fw.update();
+      fw.draw(ctx);
+      fw.particles = fw.particles.filter(p => p.alpha > 0);
+      if (fw.particles.length === 0) fireworks.splice(index, 1);
+    });
+    requestAnimationFrame(animate);
+  }
+  function startFireworks() {
+    setInterval(() => {
       const x = Math.random() * canvas.width;
       const y = Math.random() * canvas.height / 2;
-      const color = `hsl(${Math.random() * 360}, 100%, 70%)`;
-      for (let i = 0; i < 30; i++) {
-        particles.push(FireworkParticle(x, y, color));
-      }
-    }
-
-    function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach((p, i) => {
-        p.update();
-        p.draw();
-        if (p.alpha <= 0) particles.splice(i, 1);
-      });
-      requestAnimationFrame(animate);
-    }
-
-    setInterval(createFirework, 2000);
+      fireworks.push(new Firework(x, y));
+    }, 800);
     animate();
-  </script>
+  }
+</script>
 </body>
 </html>
